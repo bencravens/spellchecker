@@ -18,6 +18,7 @@ struct tree_node {
 
 /*global variable that determines tree type*/
 static tree_t tree_type;
+int max_depth = 0;
 
 static void print_info(int freq, char *word) {
     printf("%-4d %s\n", freq, word);
@@ -163,6 +164,10 @@ static tree tree_fix(tree R) {
 }
 
 tree tree_insert(tree b, char* str) {
+    int h = tree_depth(b);
+    if (h > max_depth) {
+        max_depth = h;
+    }
     if (b==NULL) {
         b = emalloc(sizeof *b);
         b->key = emalloc((strlen(str)+1) * sizeof str[0]);
@@ -183,6 +188,9 @@ tree tree_insert(tree b, char* str) {
     }
     if (tree_type == RBT) {
         b = tree_fix(b);
+    }
+    if (h==max_depth) {
+        b->colour=BLACK;
     }
     return b;
 }

@@ -8,10 +8,9 @@
 #define NUM_WORDS 10
 
 int main(void) {
-    /*now test BST*/
     FILE* ptr;
     ptr = fopen("tree-view.dot","w");
-    tree b = tree_new(BST); /*start with empty tree*/
+    tree b = tree_new(RBT);
     char word[256];
     while(getword(word,256,stdin) != EOF) {
         b = tree_insert(b,word);
