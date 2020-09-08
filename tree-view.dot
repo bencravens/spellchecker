@@ -1,0 +1,12 @@
+digraph tree {
+node [shape = Mrecord, penwidth = 2];
+"g"[label="{<f0>g:2|{<f1>|<f2>}}"color=black];
+"d"[label="{<f0>d:3|{<f1>|<f2>}}"color=black];
+"a"[label="{<f0>a:1|{<f1>|<f2>}}"color=black];
+"d":f1 -> "a":f0;
+"f"[label="{<f0>f:2|{<f1>|<f2>}}"color=black];
+"d":f2 -> "f":f0;
+"g":f1 -> "d":f0;
+"s"[label="{<f0>s:2|{<f1>|<f2>}}"color=black];
+"g":f2 -> "s":f0;
+}

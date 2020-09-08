@@ -9,6 +9,8 @@
 
 int main(void) {
     /*now test BST*/
+    FILE* ptr;
+    ptr = fopen("tree-view.dot","w");
     tree b = tree_new(BST); /*start with empty tree*/
     char word[256];
     while(getword(word,256,stdin) != EOF) {
@@ -22,7 +24,7 @@ int main(void) {
         printf("This shit null");
     }
     printf("Tree depth: %d\n", tree_depth(b));
-    tree_output_dot(b, stdin);
+    tree_output_dot(b, ptr);
     tree_free(b);
  
 

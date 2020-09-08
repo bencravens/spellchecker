@@ -71,14 +71,21 @@ void tree_inorder(tree b) {
     }
 }
 
-void tree_preorder(tree b, void f(char *str)) {
+void tree_preorder(tree b) {
     if (b==NULL) {
         return;
     }
-    f(r->key);
+    if (tree_type==RBT) {
+        if (b->colour==BLACK) {
+            printf("black: %s\n",b->key);
+        } else {
+            printf("red: %s\n", b->key);
+        }
+    } else {
+        printf("%s\n",b->key);
+    } 
     tree_preorder(b->left);
     tree_preorder(b->right);
-    }
 }
 
 tree left_rotate(tree b) {
