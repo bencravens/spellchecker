@@ -18,6 +18,10 @@ int main(void) {
     printf("\n\n\n\n\n-----------------------\n\n\n\n");
 
     tree_preorder(b);
+    if(b == NULL) {
+        printf("This shit null");
+    }
+    printf("Tree depth: %d", tree_depth(b));
     tree_free(b);
  
 

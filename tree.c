@@ -90,7 +90,7 @@ tree left_rotate(tree b) {
     /*change the root to point to its right child*/
     b = b->right;
     /*make the right child of temp (original root) point to
-    * left child of the new root. */
+     * left child of the new root. */
     temp->right = b->left;
     /*now make the left child of the new root point to temp (old root)*/
     b->left = temp;
@@ -103,7 +103,7 @@ tree right_rotate(tree b) {
     /*change the root to point to its left child*/
     b = b->left;
     /*make the left child of temp (original root) point to
-    * right child of the new root. */
+     * right child of the new root. */
     temp->left = b->right;
     /*now make the right child of the new root point to temp (old root)*/
     b->right = temp;
@@ -217,7 +217,7 @@ tree tree_delete(tree b, char* str) {
             free(b->key);
             free(b);
             b = NULL;
-        /* actually, the node has only one child */
+            /* actually, the node has only one child */
         } else if ((b->left == NULL) ^ (b->right == NULL)) {
             /*if it is the left node that is null*/
             if (b->left == NULL) {
@@ -235,7 +235,7 @@ tree tree_delete(tree b, char* str) {
                 free(b->left);
                 b->left = NULL;
             }
-        /* oops, it is actually the case that the node has two children... */
+            /* oops, it is actually the case that the node has two children... */
         } else {
             /*need to find leftmost child of right subtree*/
             tree temp = b->right;
@@ -270,4 +270,16 @@ tree tree_free(tree b) {
     return b;
 }
 
+/* Input tree b and returns an int representing longest path between the root
+   and furthest leaf node.*/
+int tree_depth(tree b) {
+    int l_height, r_height;
+    if (b == NULL) {
+        return 0;
+    }
+    l_height = tree_depth(b->left);
+    r_height = tree_depth(b->right);
 
+    return (l_height < r_height) ? (r_height + 1) : (l_height + 1);
+    
+}

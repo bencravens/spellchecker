@@ -14,5 +14,6 @@ extern int      tree_search(tree b, char* str);
 extern void     print_colour(tree b);
 extern tree      right_rotate(tree b);
 extern tree      left_rotate(tree b);
+extern int      tree_depth(tree b);
 
 #endif
