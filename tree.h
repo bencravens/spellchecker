@@ -9,7 +9,7 @@ extern tree      tree_free(tree b);
 extern void     tree_inorder(tree b);
 extern tree      tree_insert(tree b, char* str);
 extern tree      tree_new();
-extern void     tree_preorder(tree b);
+extern void     tree_preorder(tree b, void f(int freq, char* str));
 extern int      tree_search(tree b, char* str);
 extern void     print_colour(tree b);
 extern tree      right_rotate(tree b);

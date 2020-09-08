@@ -7,6 +7,10 @@
 #define ARRAY_LEN 10
 #define NUM_WORDS 10
 
+static void print_info(int freq, char* word) {
+    printf("%-4d %s\n",freq,word);
+}
+
 int main(void) {
     FILE* ptr;
     ptr = fopen("tree-view.dot","w");
@@ -18,7 +22,7 @@ int main(void) {
 
     printf("\n\n\n\n\n-----------------------\n\n\n\n");
 
-    tree_preorder(b);
+    tree_preorder(b,print_info);
     if(b == NULL) {
         printf("This shit null");
     }
