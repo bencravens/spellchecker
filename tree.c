@@ -13,10 +13,15 @@ struct tree_node {
     tree_colour colour;
     tree left;
     tree right;
+    int freq;
 };
 
 /*global variable that determines tree type*/
 static tree_t tree_type;
+
+static void print_info(int freq, char *word) {
+    printf("%-4d %s\n", freq, word);
+}
 
 void print_key(char* s) {
     printf("%s\n", s);
@@ -66,21 +71,13 @@ void tree_inorder(tree b) {
     }
 }
 
-void tree_preorder(tree b) {
+void tree_preorder(tree b, void f(char *str)) {
     if (b==NULL) {
         return;
-    } else {
-        if (tree_type==RBT) {
-            if (b->colour==BLACK) {
-                printf("black: %s\n",b->key);
-            } else {
-                printf("red: %s\n",b->key);
-            }
-        } else {
-            printf("%s\n",b->key);
-        }
-        tree_preorder(b->left);
-        tree_preorder(b->right);
+    }
+    f(r->key);
+    tree_preorder(b->left);
+    tree_preorder(b->right);
     }
 }
 
@@ -163,12 +160,14 @@ tree tree_insert(tree b, char* str) {
         b = emalloc(sizeof *b);
         b->key = emalloc((strlen(str)+1) * sizeof str[0]);
         strcpy(b->key, str);
+        b->freq = 1;
         b->left = NULL;
         b->right = NULL;
         if (tree_type == RBT) {
             b->colour = RED; /*node is red by default*/
         }
     } else if (strcmp(b->key,str)==0) {
+        b->freq++;
         ;
     } else if (strcmp(str,b->key)<0) {
         b->left = tree_insert(b->left, str);
@@ -197,63 +196,6 @@ int tree_search(tree b, char* str) {
     }
 }
 
-tree tree_delete(tree b, char* str) {
-    if (b==NULL || tree_search(b,str)==0) {
-        /*key does not exist in tree, so just return tree*/
-        printf("key does not exist in tree, just returning tree.\n");
-        return b; 
-    } else if (strcmp(str,b->key) < 0) {
-        printf("node too big, searching left subtree\n");
-        b->left = tree_delete(b->left,str);
-    } else if (strcmp(str,b->key) > 0) {
-        /*node too small, search right subtree*/
-        printf("node too small, searching right subtree\n");
-        b->right = tree_delete(b->right,str);
-    } else if (strcmp(str,b->key) == 0) {
-        /*found the string at this node*/
-        printf("found string\n");
-        /* if this node is a leaf*/
-        if (b->left == NULL && b->right == NULL) {
-            free(b->key);
-            free(b);
-            b = NULL;
-            /* actually, the node has only one child */
-        } else if ((b->left == NULL) ^ (b->right == NULL)) {
-            /*if it is the left node that is null*/
-            if (b->left == NULL) {
-                char* str = b->right->key;
-                b->key = realloc(b->key,((strlen(str)+1)*sizeof str[0]));
-                strcpy(b->key,str);
-                free(b->right->key);
-                free(b->right);
-                b->right = NULL;
-            } else {
-                char* str = b->left->key;
-                b->key = realloc(b->key,((strlen(str)+1)*sizeof str[0]));
-                strcpy(b->key,str);
-                free(b->left->key);
-                free(b->left);
-                b->left = NULL;
-            }
-            /* oops, it is actually the case that the node has two children... */
-        } else {
-            /*need to find leftmost child of right subtree*/
-            tree temp = b->right;
-            char* str;
-            while(temp->left != NULL) {
-                temp = temp->left;
-            }
-            printf("leftmost key is %s\n",temp->key);
-            printf("key to be swapped is %s\n",b->key);
-            /*now swap the leftmost key with successor, and delete leftmost*/
-            str = temp->key;
-            temp->key = b->key;
-            b->key = str;
-            b->right = tree_delete(b->right,temp->key);
-        }
-    }
-    return b;
-}
 
 tree tree_free(tree b) {
     if (b==NULL) {
@@ -279,7 +221,51 @@ int tree_depth(tree b) {
     }
     l_height = tree_depth(b->left);
     r_height = tree_depth(b->right);
-
+    
     return (l_height < r_height) ? (r_height + 1) : (l_height + 1);
     
 }
+
+/**
+ * Traverses the tree writing a DOT description about connections, and
+ * possibly colours, to the given output stream.
+ *
+ * @param t the tree to output a DOT description of.
+ * @param out the stream to write the DOT output to.
+ */
+static void tree_output_dot_aux(tree t, FILE *out) {
+    if(t->key != NULL) {
+        fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
+                t->key, t->key, t->freq,
+                (RBT == tree_type && RED == t->colour) ? "red":"black");
+    }
+    if(t->left != NULL) {
+        tree_output_dot_aux(t->left, out);
+        fprintf(out, "\"%s\":f1 -> \"%s\":f0;\n", t->key, t->left->key);
+    }
+    if(t->right != NULL) {
+        tree_output_dot_aux(t->right, out);
+        fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
+    }
+}
+
+/**
+ * Output a DOT description of this tree to the given output stream.
+ * DOT is a plain text graph description language (see www.graphviz.org).
+ * You can create a viewable graph with the command
+ *
+ *    dot -Tpdf < graphfile.dot > graphfile.pdf
+ *
+ * You can also use png, ps, jpg, svg... instead of pdf
+ *
+ * @param t the tree to output the DOT description of.
+ * @param out the stream to write the DOT description to.
+ */
+void tree_output_dot(tree t, FILE *out) {
+    fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
+    tree_output_dot_aux(t, out);
+    fprintf(out, "}\n");
+}
+
+
+

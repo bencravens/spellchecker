@@ -21,7 +21,8 @@ int main(void) {
     if(b == NULL) {
         printf("This shit null");
     }
-    printf("Tree depth: %d", tree_depth(b));
+    printf("Tree depth: %d\n", tree_depth(b));
+    tree_output_dot(b, stdin);
     tree_free(b);
  
 

@@ -15,5 +15,7 @@ extern void     print_colour(tree b);
 extern tree      right_rotate(tree b);
 extern tree      left_rotate(tree b);
 extern int      tree_depth(tree b);
+extern void    tree_output_dot(tree t, FILE *out);
+
 
 #endif
