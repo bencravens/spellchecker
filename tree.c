@@ -25,6 +25,15 @@ void print_key(char* s) {
     printf("%s\n", s);
 }
 
+tree setroot(tree b) {
+    if (b==NULL) {
+        printf("Node is null");
+    } else {
+        b->colour = BLACK;
+    }
+    return b;
+}
+
 void print_colour(tree b) {
     if (b->colour==RED) {
         printf("red: %s\n",b->key);
@@ -145,10 +154,6 @@ static tree tree_fix(tree R) {
 }
 
 tree tree_insert(tree b, char* str) {
-    int h = tree_depth(b);
-    if (h > max_depth) {
-        max_depth = h;
-    }
     if (b==NULL) {
         b = emalloc(sizeof *b);
         b->key = emalloc((strlen(str)+1) * sizeof str[0]);
@@ -169,9 +174,6 @@ tree tree_insert(tree b, char* str) {
     }
     if (tree_type == RBT) {
         b = tree_fix(b);
-    }
-    if (h==max_depth) {
-        b->colour=BLACK;
     }
     return b;
 }

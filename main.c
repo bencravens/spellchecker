@@ -43,14 +43,26 @@ int main(int argc, char* argv[]) {
     /*reading in command line arguments*/
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
+            case 'r':
+                /*declare tree as bst*/
+                dict = tree_new(RBT); 
+                /*read words in from standard in, insert into our dictionary tree*/ 
+                dict = writedict(dict, word);                 
+                /*fix root colouring to be black*/
+                dict = setroot(dict);
+                break;
             case 'c':
                 /*c's argument is available in the global
                 * variable optarg */
                 filename = optarg;
-                /*declare tree as bst*/
-                dict = tree_new(BST); 
-                /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);                 
+                /* if -r has been specified, we will have a tree already..
+                * otherwise, we will make a tree... */
+                if (dict == NULL) {
+                    /*declare tree as bst*/
+                    dict = tree_new(BST); 
+                    /*read words in from standard in, insert into our dictionary tree*/ 
+                    dict = writedict(dict, word);                 
+                }
                 /*open file to be spellchecked*/
                 if (NULL == (target = fopen(filename, "r"))) {
                     fprintf(stderr, "ERROR: can't find file %s\n", filename);
@@ -79,10 +91,12 @@ int main(int argc, char* argv[]) {
                 * of the default filename if -o is also given.
                 * filename is stored in the global string optarg */
                 graph = fopen(optarg,"w");
-                /*declare tree as bst*/
-                dict = tree_new(BST); 
-                /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);                 
+                if (dict==NULL) {
+                    /*declare tree as bst*/
+                    dict = tree_new(BST); 
+                    /*read words in from standard in, insert into our dictionary tree*/ 
+                    dict = writedict(dict, word);                 
+                }
                 tree_output_dot(dict,graph); 
                 fclose(graph);
                 break;
@@ -90,24 +104,17 @@ int main(int argc, char* argv[]) {
                 /*output a representation of the tree in dot form to the file
                 * tree-view.dot using the functions given in output-dot.txt */
                 graph = fopen("tree-view.dot","w");
-                /*declare tree as bst*/
-                dict = tree_new(BST); 
-                /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);
+                /* just in case there isn't already a tree ...*/
+                if (dict==NULL) {
+                    /*declare tree as bst*/
+                    dict = tree_new(BST); 
+                    /*read words in from standard in, insert into our dictionary tree*/ 
+                    dict = writedict(dict, word);
+                }
                 tree_output_dot(dict, graph);
                 fclose(graph);
                 break;
-            case 'r':
-                /*make the tree an rbt instead of default bst*/
-                graph = fopen("tree-view.dot","w");
-                /*declare tree as bst*/
-                dict = tree_new(RBT); 
-                /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);                 
-                tree_output_dot(dict, graph);
-                fclose(graph);
-                break;
-            case 'h':
+           case 'h':
                 /* print a help message describing how to use the program */
                 printf("this is a spellchecking program based on an implementation of a tree abstract data type, which supports both red black trees and binary search trees. \n");
                 printf("it accepts the following command line arguments:\n");
