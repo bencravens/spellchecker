@@ -29,3 +29,11 @@ int getword(char *s, int limit, FILE *stream) {
     *w = '\0';
     return w - s;
 }
+
+void* emalloc(size_t n) {
+    void* result = malloc(n);
+    if (result==NULL) {
+        fprintf(stderr, "malloc failed.\n");
+    }
+    return result;
+}

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tree.h"
+#include "mylib.h"
 
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour)) 
@@ -20,10 +21,6 @@ struct tree_node {
 static tree_t tree_type;
 int max_depth = 0;
 
-static void print_info(int freq, char *word) {
-    printf("%-4d %s\n", freq, word);
-}
-
 void print_key(char* s) {
     printf("%s\n", s);
 }
@@ -34,14 +31,6 @@ void print_colour(tree b) {
     } else {
         printf("black: %s\n",b->key);
     }
-}
-
-void* emalloc(size_t n) {
-    void* result = malloc(n);
-    if (result == NULL) {
-        fprintf(stderr, "memory allocation failed\n");
-    }
-    return result;
 }
 
 /*return a tree node pointer*/

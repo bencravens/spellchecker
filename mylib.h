@@ -4,5 +4,6 @@
 #include <stddef.h>
 
 extern int getword(char* s, int limit, FILE *stream);
+extern void* emalloc(size_t n);
 
 #endif
