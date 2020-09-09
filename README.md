@@ -17,6 +17,7 @@
 - [x] o (dot output)
 - [x] r (initialize tree as rbt)
 - [x] h (help message)
+- [ ] speed up black root colouring (causes program to lag heavily on large dictionary file)
 - [ ] comment everything and tidy it up
 - [ ] test it using the script supplied by comp sci department
 
