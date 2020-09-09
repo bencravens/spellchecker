@@ -6,9 +6,9 @@
 - [x] Add the two output_dot graph printing functions which are found at /home/cshome/coursework/242/asgn-files/ on the COSC network
 - [x] Fix the rbt code so that the root of the tree is always black
 - [x] Add getopt code to main.c so that command line arguments can be passed to main function
-- [ ] Read words from stdin into our main.c 
-- [ ] Put the words into a tree. This tree represents our "dictionary" we are using for spellcheck
-- [ ] Read every word from filename.txt using getword. IF the word exists in our dictionary tree, then it is a valid word, in which case do nothing. ELSE, it is a misspelled word, so print it to stdout
+- [x] Read words from stdin into our main.c 
+- [x] Put the words into a tree. This tree represents our "dictionary" we are using for spellcheck
+- [x] Read every word from filename.txt using getword. IF the word exists in our dictionary tree, then it is a valid word, in which case do nothing. ELSE, it is a misspelled word, so print it to stdout
 - [ ] When finished running through filename.txt, print the timing information and unknown word count to stderr like this: https://imgur.com/MB35ceI.png
 - [ ] add the following command line arguments to the script: https://imgur.com/BZG1Ain.png
 
