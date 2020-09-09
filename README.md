@@ -13,11 +13,10 @@
 ./output < smalldictionary.txt -r -c test.txt -f mydot.dot
 ```
 - [ ] comment everything and tidy it up
-- [ ] test it using the script supplied by comp sci department, i.e compare using diff command 
+- [ ] test it using the script supplied by comp sci department
 example of this: (must test for many different outputs)
 ```bash
 ./output < smalldictionary.txt -r -c test.txt >> ouroutput.txt
 ./sample-asgn < smalldictionary.txt -r -c test.txt >> modeloutput.txt
-diff ouroutput.txt modeloutput.txt
 ```
 - [ ] make it so that it is agnostic to properly capitalized words, i.e it spellchecks "Test" as "test" but not "tEst" as "test". The checker script does this so we need to do it too.
