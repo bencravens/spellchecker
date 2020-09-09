@@ -12,12 +12,36 @@ static void print_info(int freq, char* word) {
     printf("%-4d %s\n",freq,word);
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
+    /*declaring constants*/
+    const char *optstring = "ab:c";
+    char option;
     FILE* ptr;
     tree b = tree_new(RBT);
     char word[256];
     ptr = fopen("tree-view.dot","w");
     
+    /*reading in command line arguments*/
+    while ((option = getopt(argc, argv, optstring)) != EOF) {
+        switch (option) {
+            case 'a':
+                printf("it's A.\n");
+                break;
+            case 'b':
+                /*b's argument is available in the global
+                * variable optarg */
+                printf("it's B, argument %s\n",optarg);
+                break;
+            case 'c':
+                printf("it's C.\n");
+                break;
+            default:
+                printf("invalid command line argument");
+                break;
+        }
+
+    }
+ 
     while(getword(word,256,stdin) != EOF) {
         b = tree_insert(b,word);
     }
