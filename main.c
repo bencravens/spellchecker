@@ -66,10 +66,6 @@ int main(int argc, char* argv[]) {
         dict = tree_insert(dict,word);
     }
 
-    /*traverse tree*/
-    printf("printing dictionary. \n");
-    tree_preorder(dict,print_info);
-    printf("\n");
     if(dict == NULL) {
         printf("Empty dictionary..");
     }
@@ -80,10 +76,9 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
     /*now read words in and spellcheck them*/
-    printf("printing misspelled words...\n");
     while (1 == fscanf(target,"%s",word)) {
         if (tree_search(dict,word) == 0) {
-            fprintf(stderr,"%s\n",word);
+            fprintf(stdout,"%s\n",word);
         }
     } 
     /*output graph, free memory*/
