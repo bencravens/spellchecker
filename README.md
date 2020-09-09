@@ -10,12 +10,14 @@
 - [x] Put the words into a tree. This tree represents our "dictionary" we are using for spellcheck
 - [x] Read every word from filename.txt using getword. IF the word exists in our dictionary tree, then it is a valid word, in which case do nothing. ELSE, it is a misspelled word, so print it to stdout
 - [ ] When finished running through filename.txt, print the timing information and unknown word count to stderr like this: https://imgur.com/MB35ceI.png
-- [ ] add the following command line arguments to the script: (c, d, f, o, r, h) https://imgur.com/BZG1Ain.png
+- [x] add the following command line arguments to the script: (c, d, f, o, r, h) https://imgur.com/BZG1Ain.png
 - [x] c (spellcheck)
-- [ ] d (print depth of tree)
-- [ ] f (dot output to custom filename)
-- [ ] o (dot output)
-- [ ] r (initialize tree as rbt)
-- [ ] h (help message)
+- [x] d (print depth of tree)
+- [x] f (dot output to custom filename)
+- [x] o (dot output)
+- [x] r (initialize tree as rbt)
+- [x] h (help message)
+- [ ] comment everything and tidy it up
+- [ ] test it using the script supplied by comp sci department
 
 To compile and run the program, use "make", the linux command.
