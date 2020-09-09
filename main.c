@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <time.h>
 #include "tree.h"
 #include "mylib.h"
 
@@ -39,6 +40,10 @@ int main(int argc, char* argv[]) {
     int depth;
     char word[256];
     tree dict = NULL;
+    double fill_time;
+    double search_time;
+    clock_t tic, toc;
+    int unknown_words = 0;
     
     /*reading in command line arguments*/
     while ((option = getopt(argc, argv, optstring)) != EOF) {
@@ -46,8 +51,12 @@ int main(int argc, char* argv[]) {
             case 'r':
                 /*declare tree as bst*/
                 dict = tree_new(RBT); 
+                /*time insertion */
+                tic = clock();
                 /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);                 
+                dict = writedict(dict, word);  
+                toc = clock();
+                fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
                 /*fix root colouring to be black*/
                 dict = setroot(dict);
                 break;
@@ -60,8 +69,12 @@ int main(int argc, char* argv[]) {
                 if (dict == NULL) {
                     /*declare tree as bst*/
                     dict = tree_new(BST); 
+                    /*time insertion*/
+                    tic = clock();
                     /*read words in from standard in, insert into our dictionary tree*/ 
-                    dict = writedict(dict, word);                 
+                    dict = writedict(dict, word);
+                    toc = clock();
+                    fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);                 
                 }
                 /*open file to be spellchecked*/
                 if (NULL == (target = fopen(filename, "r"))) {
@@ -69,20 +82,31 @@ int main(int argc, char* argv[]) {
                     return EXIT_FAILURE;
                 }
                 /*now read words in and spellcheck them*/
+                /*time search*/
+                tic = clock();
                 while (1 == fscanf(target,"%s",word)) {
                     if (tree_search(dict,word) == 0) {
                         fprintf(stdout,"%s\n",word);
+                        unknown_words++;
                     }
                 }
+                toc = clock();
+                search_time = (toc - tic) / ((double)CLOCKS_PER_SEC);
+                fprintf(stderr, "Fill time     : %f\n", fill_time);
+                fprintf(stderr, "Search time   : %f\n", search_time);
+                fprintf(stderr, "Unknown words = %d\n", unknown_words);
                 fclose(target);
                 break; 
             case 'd':
                 /* this option should print the depth of the 
                 * tree to stdout and not do anything else */
-                /*declare tree as bst*/
-                dict = tree_new(BST); 
-                /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);                 
+                /*make our tree if we haven't already*/
+                if (dict==NULL) {
+                    /*declare tree as bst*/
+                    dict = tree_new(BST); 
+                    /*read words in from standard in, insert into our dictionary tree*/ 
+                    dict = writedict(dict, word);                 
+                }
                 depth = tree_depth(dict); 
                 fprintf(stdout,"%d\n",depth);
                 break;
