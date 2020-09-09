@@ -7,8 +7,8 @@
 - [x] Fix the rbt code so that the root of the tree is always black
 - [ ] Add getopt code to main.c so that command line arguments for dictionary and target .txt files can be passed to main function
 - [ ] Read words from dictionary.txt into our main.c using stdin stream
-- [ ] Put the words into a tree (RBT)
-- [ ] Read every word from filename.txt using getword. IF the word exists in dictionary.txt, then it is a valid word, in which case do nothing. Otherwise, it is a misspelled word, so print it to stdout
+- [ ] Put the words into a tree
+- [ ] Read every word from filename.txt using getword. IF the word exists in our tree made from dictionary.txt, then it is a valid word, in which case do nothing. ELSE, it is a misspelled word, so print it to stdout
 - [ ] When finished running through filename.txt, print the timing information and unknown word count to stderr like this: https://imgur.com/MB35ceI.png
 - [ ] add the following command line arguments to the script: https://imgur.com/BZG1Ain.png
 
