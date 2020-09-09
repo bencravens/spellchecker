@@ -5,7 +5,7 @@
 - [x] Add a frequency field to the struct tree_node and update the frequency whenever a duplicate node is added to the tree
 - [x] Add the two output_dot graph printing functions which are found at /home/cshome/coursework/242/asgn-files/ on the COSC network
 - [x] Fix the rbt code so that the root of the tree is always black
-- [ ] Add getopt code to main.c so that command line arguments can be passed to main function
+- [x] Add getopt code to main.c so that command line arguments can be passed to main function
 - [ ] Read words from stdin into our main.c 
 - [ ] Put the words into a tree. This tree represents our "dictionary" we are using for spellcheck
 - [ ] Read every word from filename.txt using getword. IF the word exists in our dictionary tree, then it is a valid word, in which case do nothing. ELSE, it is a misspelled word, so print it to stdout
