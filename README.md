@@ -1,6 +1,6 @@
 # 242assignment
 ## TODO: 
-- [ ] When finished running through filename.txt, print the timing information and unknown word count to stderr like this: https://imgur.com/MB35ceI.png
+- [x] When finished running through filename.txt, print the timing information and unknown word count to stderr like this: https://imgur.com/MB35ceI.png
 - [x] add the following command line arguments to the script: (c, d, f, o, r, h) https://imgur.com/BZG1Ain.png
 - [x] c (spellcheck)
 - [x] d (print depth of tree)
