@@ -30,7 +30,7 @@ check:
 	./output < smalldictionary.txt -r -f test1.dot
 memcheck:
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
-	valgrind ./output < smalldictionary.txt -r -c test.txt -f mydot.dot
+	./output < smalldictionary.txt -r -c test.txt
 	echo "now running sample program with same settings.."
 	./sample-asgn < smalldictionary.txt -r -c test.txt
 clean:

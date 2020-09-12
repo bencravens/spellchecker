@@ -29,7 +29,7 @@ tree writedict(tree dict, char* word) {
 
 int main(int argc, char* argv[]) {
     /*declaring constants*/
-    const char *optstring = "c:df:orh";
+    const char* optstring = "c:df:orh";
     extern char* optarg;
     char* filename;
     char option;
