@@ -4,17 +4,18 @@ c:
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
 	./output < dictionary.txt -c "test.txt"
 dot: 
-	dot -Tpdf < tree-view.dot > tree-view.pdf
-	okular tree-view.pdf
+	dot -Tpdf < output.dot > output.pdf
+	dot -Tpdf < sample.dot > sample.pdf
 d:
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
 	./output < dictionary.txt -d
 f:
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
-	./output < dictionary.txt -f "customdot.dot"
+	./output < smalldictionary.txt -r -o -f "output.dot"
+	./sample-asgn < smalldictionary.txt -r -o -f "sample.dot"
 o:
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
-	./output < dictionary.txt -o
+	./output < smalldictionary.txt -o
 r:
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
 	./output < dictionary.txt -r
@@ -32,6 +33,6 @@ memcheck:
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
 	./output < smalldictionary.txt -r -c test.txt
 	echo "now running sample program with same settings.."
-	./sample-asgn < smalldictionary.txt -r -c test.txt
+	./sample-asgn < smalldictionary.txt -c test.txt
 clean:
 	rm test.dot && rm test1.dot

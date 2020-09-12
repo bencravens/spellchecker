@@ -17,6 +17,7 @@ static void print_info(int freq, char* word) {
 /*auxillary function to populate dictionary tree with words*/
 tree writedict(tree dict, char* word) {
     while(getword(word,sizeof word,stdin) != EOF) {
+        printf("inserting %s\n",word);
         dict = tree_insert(dict,word);
     }
 
@@ -87,7 +88,10 @@ int main(int argc, char* argv[]) {
                 /*time insertion */
                 tic = clock();
                 /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);
+                while(getword(word,sizeof word,stdin) != EOF) {
+                    dict = tree_insert(dict,word);
+                } 
+                /*dict = writedict(dict, word);*/
                 toc = clock();
                 fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
                 /*fix root colouring to be black*/
@@ -105,7 +109,9 @@ int main(int argc, char* argv[]) {
                     /*time insertion*/
                     tic = clock();
                     /*read words in from standard in, insert into our dictionary tree*/ 
-                    dict = writedict(dict, word);
+                    while(getword(word,sizeof word,stdin) != EOF) {
+                        dict = tree_insert(dict,word);
+                    } 
                     toc = clock();
                     fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);                 
                 }
@@ -142,7 +148,9 @@ int main(int argc, char* argv[]) {
                     /*declare tree as bst*/
                     dict = tree_new(BST); 
                     /*read words in from standard in, insert into our dictionary tree*/ 
-                    dict = writedict(dict, word);                 
+                    while(getword(word,sizeof word,stdin) != EOF) {
+                        dict = tree_insert(dict,word);
+                    } 
                 }
                 depth = tree_depth(dict); 
                 fprintf(stdout,"%d\n",depth);
@@ -160,7 +168,9 @@ int main(int argc, char* argv[]) {
                     /*declare tree as bst*/
                     dict = tree_new(BST); 
                     /*read words in from standard in, insert into our dictionary tree*/ 
-                    dict = writedict(dict, word);
+                    while(getword(word,sizeof word,stdin) != EOF) {
+                        dict = tree_insert(dict,word);
+                    } 
                 }
                 graph = fopen(optarg,"w");
                 tree_output_dot(dict, graph);
@@ -181,7 +191,9 @@ int main(int argc, char* argv[]) {
                     /*declare tree as bst*/
                     dict = tree_new(BST); 
                     /*read words in from standard in, insert into our dictionary tree*/ 
-                    dict = writedict(dict, word);
+                    while(getword(word,sizeof word,stdin) != EOF) {
+                        dict = tree_insert(dict,word);
+                    } 
                 }
                 tree_output_dot(dict, graph);
                 fclose(graph);

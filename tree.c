@@ -155,9 +155,11 @@ static tree tree_fix(tree R) {
 }
 
 tree tree_insert(tree b, char* str) {
+    int s;
     if (b==NULL) {
         b = emalloc(sizeof *b);
-        b->key = emalloc((strlen(str)+1) * sizeof str[0]);
+        s = (strlen(str)+1) * sizeof str[0];
+        b->key = emalloc(s);
         strcpy(b->key, str);
         b->freq = 1;
         b->left = NULL;
