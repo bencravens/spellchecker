@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
     extern char* optarg;
     char* filename;
     char option;
+    char option1;
     /*file pointer for graph output*/
     FILE* graph;
     /*file pointer for .txt file to be spellchecked*/
@@ -80,6 +81,7 @@ int main(int argc, char* argv[]) {
     * we have been passed (some args are mutually exclusive, while others are fine to combine*/
     optind = 0;
     /*now executing*/
+    option = getopt(argc, argv, optstring);
     do { 
         switch (option) {
             case 'r':

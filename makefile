@@ -13,7 +13,7 @@ ccheck:
 	#compiling our program
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
 	#running our program with valgrind
-	valgrind ./output < smalldictionary.txt -r -c test.txt >> myoutput.txt
+	./output < smalldictionary.txt -r -c test.txt >> myoutput.txt
 	#now running sample program with same settings.. : 
 	./sample-asgn < smalldictionary.txt -c test.txt >> sampleoutput.txt
 	#the difference between the two...
