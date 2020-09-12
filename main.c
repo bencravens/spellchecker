@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     * we have been passed (some args are mutually exclusive, while others are fine to combine*/
     optind = 0;
     /*now executing*/
-    while ((option = getopt(argc, argv, optstring)) != EOF) {
+    do { 
         switch (option) {
             case 'r':
                 /*declare tree as bst*/
@@ -172,7 +172,9 @@ int main(int argc, char* argv[]) {
                         dict = tree_insert(dict,word);
                     } 
                 }
-                graph = fopen(optarg,"w");
+                filename = optarg;
+                graph = fopen(filename,"w");
+                printf("Creating dot file '%s'\n",filename);
                 tree_output_dot(dict, graph);
                 fclose(graph);
                 break;
@@ -210,10 +212,15 @@ int main(int argc, char* argv[]) {
                 printf("-h: print help message\n");
                 break;
             default:
-                printf("invalid command line argument");
+                dict = tree_new(BST); 
+                /*read words in from standard in, insert into our dictionary tree*/ 
+                while(getword(word,sizeof word,stdin) != EOF) {
+                    dict = tree_insert(dict,word);
+                } 
+                tree_preorder(dict,print_info);
                 break;
         }
-    }
+    } while ((option = getopt(argc, argv, optstring)) != EOF);
     tree_free(dict);
     return EXIT_SUCCESS;
 }
