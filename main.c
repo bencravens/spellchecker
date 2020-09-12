@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <ctype.h>
 #include <time.h>
 #include "tree.h"
 #include "mylib.h"
@@ -14,8 +15,8 @@ static void print_info(int freq, char* word) {
 }
 
 /*auxillary function to populate dictionary tree with words*/
-tree writedict(tree dict, char word[256]) {
-    while(getword(word,256,stdin) != EOF) {
+tree writedict(tree dict, char* word) {
+    while(getword(word,sizeof word,stdin) != EOF) {
         dict = tree_insert(dict,word);
     }
 
@@ -86,7 +87,7 @@ int main(int argc, char* argv[]) {
                 /*time insertion */
                 tic = clock();
                 /*read words in from standard in, insert into our dictionary tree*/ 
-                dict = writedict(dict, word);  
+                dict = writedict(dict, word);
                 toc = clock();
                 fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
                 /*fix root colouring to be black*/
@@ -116,7 +117,7 @@ int main(int argc, char* argv[]) {
                 /*now read words in and spellcheck them*/
                 /*time search*/
                 tic = clock();
-                while (1 == fscanf(target,"%s",word)) {
+                while(getword(word,sizeof word,target) != EOF) {
                     if (tree_search(dict,word) == 0) {
                         fprintf(stdout,"%s\n",word);
                         unknown_words++;
