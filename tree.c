@@ -18,211 +18,215 @@ struct tree_node {
     int freq;
 };
 
-/*global variable that determines tree type*/
 static tree_t tree_type;
-int max_depth = 0;
 
+/**
+ * This function takes a string as input and prints it to stdin.
+ *
+ * @param s string to print
+ */
 void print_key(char* s) {
     printf("%s\n", s);
 }
 
-tree setroot(tree b) {
-    if (b==NULL) {
+/**
+ * Sets the root of tree
+ *
+ * @param s string to print
+ */
+tree setroot_black(tree t) {
+    if (t==NULL) {
         printf("Node is null");
     } else {
-        b->colour = BLACK;
+        t->colour = BLACK;
     }
-    return b;
+    return t;
 }
 
-void print_colour(tree b) {
-    if (b->colour==RED) {
-        printf("red: %s\n",b->key);
+void print_colour(tree t) {
+    if (t->colour==RED) {
+        printf("red: %s\n",t->key);
     } else {
-        printf("black: %s\n",b->key);
+        printf("black: %s\n",t->key);
     }
 }
 
-/*return a tree node pointer*/
-struct tree_node* talloc(void) {
-    return (struct tree_node * ) emalloc(sizeof(struct tree_node));
-}
+
 
 tree tree_new(tree_t t) {
     tree_type = t;
     return NULL;
 }
 
-void tree_inorder(tree b) {
-    if (b==NULL) {
+void tree_inorder(tree t) {
+    if (t==NULL) {
         return;
     } else {
-        tree_inorder(b->left);
+        tree_inorder(t->left);
         if (tree_type==RBT) {
-            if (b->colour==BLACK) {
-                printf("black: %s\n",b->key);
+            if (t->colour==BLACK) {
+                printf("black: %s\n",t->key);
             } else {
-                printf("red: %s\n",b->key);
+                printf("red: %s\n",t->key);
             }
         } else {
-            printf("%s\n",b->key);
+            printf("%s\n",t->key);
         } 
-        tree_inorder(b->right);
+        tree_inorder(t->right);
     }
 }
 
-void tree_preorder(tree b, void f(int freq, char* word)) {
-    if (b==NULL) {
+void tree_preorder(tree t, void f(int freq, char* word)) {
+    if (t==NULL) {
         return;
     }
-    f(b->freq,b->key);
-    tree_preorder(b->left,f);
-    tree_preorder(b->right,f);
+    f(t->freq,t->key);
+    tree_preorder(t->left,f);
+    tree_preorder(t->right,f);
 }
 
-tree left_rotate(tree b) {
+tree left_rotate(tree t) {
     /*keep track of original*/
-    tree temp = b;
+    tree temp = t;
     /*change the root to point to its right child*/
-    b = b->right;
+    t = t->right;
     /*make the right child of temp (original root) point to
      * left child of the new root. */
-    temp->right = b->left;
+    temp->right = t->left;
     /*now make the left child of the new root point to temp (old root)*/
-    b->left = temp;
-    return b;
+    t->left = temp;
+    return t;
 }
 
-tree right_rotate(tree b) {
+tree right_rotate(tree r) {
     /*keep track of original*/
-    tree temp = b;
+    tree temp = r;
     /*change the root to point to its left child*/
-    b = b->left;
+    r = r->left;
     /*make the left child of temp (original root) point to
      * right child of the new root. */
-    temp->left = b->right;
+    temp->left = r->right;
     /*now make the right child of the new root point to temp (old root)*/
-    b->right = temp;
-    return b;
+    r->right = temp;
+    return r;
 }
 
 
-static tree tree_fix(tree R) {
-    if(IS_RED(R->left) && IS_RED(R->left->left)) {
-        if (IS_RED(R->right)) {
-            R->colour = RED;
-            R->left->colour = BLACK;
-            R->right->colour = BLACK;
+static tree tree_fix(tree r) {
+    if(IS_RED(r->left) && IS_RED(r->left->left)) {
+        if (IS_RED(r->right)) {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK;
         } else {
-            R = right_rotate(R);
-            R->colour = BLACK;
-            R->right->colour = RED;
+            r = right_rotate(r);
+            r->colour = BLACK;
+            r->right->colour = RED;
         } 
-    } else if (IS_RED(R->left) && IS_RED(R->left->right)) {
-        if (IS_RED(R->right)) {
-            R->colour = RED;
-            R->left->colour = BLACK;
-            R->right->colour = BLACK;
+    } else if (IS_RED(r->left) && IS_RED(r->left->right)) {
+        if (IS_RED(r->right)) {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK;
         } else {
-            R->left = left_rotate(R->left);
-            R = right_rotate(R);
-            R->colour = BLACK;
-            R->right->colour = RED;
+            r->left = left_rotate(r->left);
+            r = right_rotate(r);
+            r->colour = BLACK;
+            r->right->colour = RED;
         }
-    } else if (IS_RED(R->right) && IS_RED(R->right->left)) {
-        if (IS_RED(R->left)) {
-            R->colour = RED;
-            R->left->colour = BLACK;
-            R->right->colour = BLACK; 
+    } else if (IS_RED(r->right) && IS_RED(r->right->left)) {
+        if (IS_RED(r->left)) {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK; 
         } else {
-            R->right = right_rotate(R->right);
-            R = left_rotate(R);
-            R->colour = BLACK;
-            R->left->colour = RED;
+            r->right = right_rotate(r->right);
+            r = left_rotate(r);
+            r->colour = BLACK;
+            r->left->colour = RED;
         } 
-    } else if (IS_RED(R->right) && IS_RED(R->right->right)) {
-        if (IS_RED(R->left)) {
-            R->colour = RED;
-            R->left->colour = BLACK;
-            R->right->colour = BLACK;
+    } else if (IS_RED(r->right) && IS_RED(r->right->right)) {
+        if (IS_RED(r->left)) {
+            r->colour = RED;
+            r->left->colour = BLACK;
+            r->right->colour = BLACK;
         } else {
-            R = left_rotate(R);
-            R->colour = BLACK;
-            R->left->colour = RED;
+            r = left_rotate(r);
+            r->colour = BLACK;
+            r->left->colour = RED;
         }
     } 
-    return R;
+    return r;
 }
 
-tree tree_insert(tree b, char* str) {
-    int s;
-    if (b==NULL) {
-        b = emalloc(sizeof *b);
-        s = (strlen(str)+1) * sizeof str[0];
-        b->key = emalloc(s);
-        strcpy(b->key, str);
-        b->freq = 1;
-        b->left = NULL;
-        b->right = NULL;
+tree tree_insert(tree t, char* str) {
+
+    if (t==NULL) {
+        t = emalloc(sizeof *t);
+        t->key = emalloc((strlen(str) + 1) * sizeof t->key[0]);
+        strcpy(t->key, str);
+        t->freq = 1;
+        t->left = NULL;
+        t->right = NULL;
         if (tree_type == RBT) {
-            b->colour = RED; /*node is red by default*/
+            t->colour = RED; /*node is red by default*/
         }
-    } else if (strcmp(b->key,str)==0) {
-        b->freq++;
+    } else if (strcmp(t->key,str)==0) {
+        t->freq++;
         ;
-    } else if (strcmp(str,b->key)<0) {
-        b->left = tree_insert(b->left, str);
+    } else if (strcmp(str,t->key)<0) {
+        t->left = tree_insert(t->left, str);
     } else {
-        b->right = tree_insert(b->right,str);
+        t->right = tree_insert(t->right,str);
     }
     if (tree_type == RBT) {
-        b = tree_fix(b);
+        t = tree_fix(t);
     }
-    return b;
+    return t;
 }
 
-int tree_search(tree b, char* str) {
-    if (b==NULL) {
+int tree_search(tree t, char* str) {
+    if (t==NULL) {
         /*empty tree, so string can't be found*/
         return 0;
-    } else if (strcmp(b->key,str)==0) {
+    } else if (strcmp(t->key,str)==0) {
         /*found the string, return true*/
         return 1;
-    } else if (strcmp(str,b->key) < 0) {
+    } else if (strcmp(str,t->key) < 0) {
         /*node too big, search left subtree*/
-        return tree_search(b->left,str);
+        return tree_search(t->left,str);
     } else {
         /*node too small, search right subtree*/
-        return tree_search(b->right,str);
+        return tree_search(t->right,str);
     }
 }
 
 
-tree tree_free(tree b) {
-    if (b==NULL) {
-        return b;
+tree tree_free(tree t) {
+    if (t==NULL) {
+        return t;
     }
-    if (b->left != NULL) {
-        b->left = tree_free(b->left);
+    if (t->left != NULL) {
+        t->left = tree_free(t->left);
     }
-    if (b->right != NULL) {
-        b->right = tree_free(b->right);
+    if (t->right != NULL) {
+        t->right = tree_free(t->right);
     }
-    free(b->key);
-    free(b);
-    return b;
+    free(t->key);
+    free(t);
+    return t;
 }
 
 /* Input tree b and returns an int representing longest path between the root
    and furthest leaf node.*/
-int tree_depth(tree b) {
+int tree_depth(tree t) {
     int l_height, r_height;
-    if (b == NULL) {
-        return 0;
+    if (t == NULL) {
+        return -1;
     }
-    l_height = tree_depth(b->left);
-    r_height = tree_depth(b->right);
-    
+    l_height = tree_depth(t->left);
+    r_height = tree_depth(t->right);
+
     return (l_height < r_height) ? (r_height + 1) : (l_height + 1);
     
 }
