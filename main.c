@@ -30,9 +30,11 @@ tree writedict(tree dict, char* word) {
 
 int main(int argc, char* argv[]) {
     /*declaring constants*/
+    clock_t tic, toc;
     const char* optstring = "c:df:orh";
     extern char* optarg;
-    char* filename;
+    char* filename_c;
+    char* filename_f;
     char option;
     /*file pointer for graph output*/
     FILE* graph;
@@ -44,13 +46,13 @@ int main(int argc, char* argv[]) {
     tree dict = NULL;
     double fill_time=0;
     double search_time=0;
-    clock_t tic, toc;
     int unknown_words = 0;
     /*keep track of which cases we have had (as sometimes when we pass one command line arg others should be ignored)*/
     int case_r = 0;
     int case_c = 0;
-    int case_f = 0;
+    int case_d = 0;
     int case_o = 0;
+    int case_f = 0;
     /*reading in command line arguments, keeping track of which ones we have been passed*/
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
@@ -59,18 +61,40 @@ int main(int argc, char* argv[]) {
                 break;
             case 'c':
                 case_c = 1;
+                filename_c = optarg;
                 break; 
             case 'd':
+                case_d = 1;
                 break;
            case 'o':
                 case_o = 1;
                 break;
            case 'f':
                 case_f = 1;
+                filename_f = optarg;
                 break;
            case 'h':
+                fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
+                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
+                fprintf(stderr,"alongside their frequencies to stdout.\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
+                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
+                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n ");
+                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
+                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
+                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n");
+                fprintf(stderr," -d           Only print the tree depth (ignore -o)\n");
+                fprintf(stderr," -f FILENAME  Write DOT output to FILENAME (if -o given)\n");
+                fprintf(stderr," -o           Output the tree in DOT form to file 'tree-view.dot'\n");
+                fprintf(stderr," -r           Make the tree an RBT (the default is a BST)\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr," -h           Print this message\n");
+                exit(EXIT_FAILURE);
                 break;
-           default:
+            default:
                 fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
                 fprintf(stderr,"\n");
                 fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
@@ -93,170 +117,69 @@ int main(int argc, char* argv[]) {
                 break;
         }
     }
-    /*optind is the argument of the option array we are at. need to reset it to iterate over command line args again*/
-    /* we iterate over the command line args to execute the actions they specify, now that we know all the args that 
-    * we have been passed (some args are mutually exclusive, while others are fine to combine*/
-    optind = 0;
-    /*now executing*/
-    option = getopt(argc, argv, optstring);
-    do { 
-        switch (option) {
-            case 'r':
-                /*declare tree as bst*/
-                dict = tree_new(RBT); 
-                /*time insertion */
-                tic = clock();
-                /*read words in from standard in, insert into our dictionary tree*/ 
-                while(getword(word,sizeof word,stdin) != EOF) {
-                    dict = tree_insert(dict,word);
-                } 
-                /*dict = writedict(dict, word);*/
-                toc = clock();
-                fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
-                /*fix root colouring to be black*/
-                dict = setroot_black(dict);
-                break;
-            case 'c':
-                /*c's argument is available in the global
-                * variable optarg */
-                filename = optarg;
-                /* if -r has been specified, we will have a tree already..
-                * otherwise, we will make a tree... */
-                if (case_r==0) {
-                    /*declare tree as bst*/
-                    dict = tree_new(BST); 
-                    /*time insertion*/
-                    tic = clock();
-                    /*read words in from standard in, insert into our dictionary tree*/ 
-                    while(getword(word,sizeof word,stdin) != EOF) {
-                        dict = tree_insert(dict,word);
-                    } 
-                    toc = clock();
-                    fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);                 
-                }
-                /*open file to be spellchecked*/
-                if (NULL == (target = fopen(filename, "r"))) {
-                    fprintf(stderr, "ERROR: can't find file %s\n", filename);
-                    return EXIT_FAILURE;
-                }
-                /*now read words in and spellcheck them*/
-                /*time search*/
-                tic = clock();
-                while(getword(word,sizeof word,target) != EOF) {
-                    if (tree_search(dict,word) == 0) {
-                        fprintf(stdout,"%s\n",word);
-                        unknown_words++;
-                    }
-                }
-                toc = clock();
-                search_time = (toc - tic) / ((double)CLOCKS_PER_SEC);
-                fprintf(stderr, "Fill time     : %f\n", fill_time);
-                fprintf(stderr, "Search time   : %f\n", search_time);
-                fprintf(stderr, "Unknown words = %d\n", unknown_words);
-                fclose(target);
-                break; 
-            case 'd':
-                /* this option should print the depth of the 
-                * tree to stdout and not do anything else */
-                /*make our tree if we haven't already*/
-                /*if we have already done case_c, ignore this arg*/
-                if (case_c) {
-                    break;
-                }
-                if (case_r==0) {
-                    /*declare tree as bst*/
-                    dict = tree_new(BST); 
-                    /*read words in from standard in, insert into our dictionary tree*/ 
-                    while(getword(word,sizeof word,stdin) != EOF) {
-                        dict = tree_insert(dict,word);
-                    } 
-                }
-                depth = tree_depth(dict); 
-                fprintf(stdout,"%d\n",depth);
-                break;
-            case 'f':
-                /*write the dot output to filename instead
-                * of the default filename if -o is also given.
-                * filename is stored in the global string optarg */
-                /*we should only do this option if case o has also been passed, and there is no case c...*/
-                if (case_o==0 || case_c==1) {
-                    break;
-                }
-                /* just in case there isn't already a tree ...*/
-                if (case_r==0) {
-                    /*declare tree as bst*/
-                    dict = tree_new(BST); 
-                    /*read words in from standard in, insert into our dictionary tree*/ 
-                    while(getword(word,sizeof word,stdin) != EOF) {
-                        dict = tree_insert(dict,word);
-                    } 
-                }
-                filename = optarg;
-                graph = fopen(filename,"w");
-                printf("Creating dot file '%s'\n",filename);
-                tree_output_dot(dict, graph);
-                fclose(graph);
-                break;
-            case 'o':
-                /*output a representation of the tree in dot form to the file
-                * tree-view.dot using the functions given in output-dot.txt */
-                /*if we have already done case c or case f, we should break..*/
-                if (case_c) {
-                    break;
-                } else if (case_f) {
-                    break;
-                }
-                graph = fopen("tree-view.dot","w");
-                /* just in case there isn't already a tree ...*/
-                if (case_r==0) {
-                    /*declare tree as bst*/
-                    dict = tree_new(BST); 
-                    /*read words in from standard in, insert into our dictionary tree*/ 
-                    while(getword(word,sizeof word,stdin) != EOF) {
-                        dict = tree_insert(dict,word);
-                    } 
-                }
-                tree_output_dot(dict, graph);
-                fclose(graph);
-                break;
-            case 'h':
-                fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
-                fprintf(stderr,"\n");
-                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
-                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
-                fprintf(stderr,"alongside their frequencies to stdout.\n");
-                fprintf(stderr,"\n");
-                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
-                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
-                fprintf(stderr,"alongside their frequencies to stdout.\n");
-                fprintf(stderr,"\n");
-                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
-                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
-                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n ");
-                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
-                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
-                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n");
-                fprintf(stderr," -d           Only print the tree depth (ignore -o)\n");
-                fprintf(stderr," -f FILENAME  Write DOT output to FILENAME (if -o given)\n");
-                fprintf(stderr," -o           Output the tree in DOT form to file 'tree-view.dot'\n");
-                fprintf(stderr," -r           Make the tree an RBT (the default is a BST)\n");
-                fprintf(stderr,"\n");
-                fprintf(stderr," -h           Print this message\n"); 
-                break;
-            case -1:
-                dict = tree_new(BST); 
-                /*read words in from standard in, insert into our dictionary tree*/ 
-                while(getword(word,sizeof word,stdin) != EOF) {
-                   dict = tree_insert(dict,word);
-                } 
-                tree_preorder(dict,print_info);
-                break;
-            default:
-                /*should not reach here... exceptions should be handled in first
-                 *switch statement*/              
-                break;
+    
+    if (case_r) {
+        /*start fill timer*/
+        tic = clock();
+        /*declare tree as rbt*/
+        dict = tree_new(RBT); 
+    } else {
+        /* r is being called, so let's make a rbt here. */
+        /*start fill timer*/
+        tic = clock();
+        /*declare tree as bst*/
+        dict = tree_new(BST);
+    } 
+
+    /*read words in from standard in, insert into our dictionary tree*/ 
+    while(getword(word,sizeof word,stdin) != EOF) {
+        dict = tree_insert(dict,word);
+    } 
+    dict = writedict(dict, word);
+    toc = clock();
+    fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
+    /*fix root colouring to be black*/
+    if (case_r) {
+        dict = setroot_black(dict);
+    }
+
+    if (case_c) {
+        /*open file to be spellchecked*/
+        if (NULL == (target = fopen(filename_c, "r"))) {
+            fprintf(stderr, "ERROR: can't find file %s\n", filename_c);
+            return EXIT_FAILURE;
         }
-    } while ((option = getopt(argc, argv, optstring)) != EOF);
+        /*now read words in and spellcheck them*/
+        /*time search*/
+        tic = clock();
+        while(getword(word,sizeof word,target) != EOF) {
+            if (tree_search(dict,word) == 0) {
+                fprintf(stdout,"%s\n",word);
+                unknown_words++;
+            }
+        }
+        toc = clock();
+        search_time = (toc - tic) / ((double)CLOCKS_PER_SEC);
+        fprintf(stderr, "Fill time     : %f\n", fill_time);
+        fprintf(stderr, "Search time   : %f\n", search_time);
+        fprintf(stderr, "Unknown words = %d\n", unknown_words);
+        fclose(target);
+    } else if (case_d) {
+        depth = tree_depth(dict); 
+        fprintf(stdout,"%d\n",depth);
+    } else if (case_o) {
+        if (case_f) {
+            graph = fopen(filename_f,"w");
+            printf("Creating dot file '%s'\n",filename_f);
+        } else {
+            graph = fopen("tree-view.dot","w"); 
+            printf("Creating dot file 'tree-view.dot'\n");
+        }
+        tree_output_dot(dict, graph);
+        fclose(graph);
+    } else {
+       tree_preorder(dict,print_info);
+    }
     tree_free(dict);
     return EXIT_SUCCESS;
 }
