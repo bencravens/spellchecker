@@ -34,7 +34,6 @@ int main(int argc, char* argv[]) {
     extern char* optarg;
     char* filename;
     char option;
-    char option1;
     /*file pointer for graph output*/
     FILE* graph;
     /*file pointer for .txt file to be spellchecked*/
@@ -71,8 +70,26 @@ int main(int argc, char* argv[]) {
                 break;
            case 'h':
                 break;
-            default:
-                printf("invalid command line argument");
+           default:
+                fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
+                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
+                fprintf(stderr,"alongside their frequencies to stdout.\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
+                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
+                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n ");
+                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
+                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
+                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n");
+                fprintf(stderr," -d           Only print the tree depth (ignore -o)\n");
+                fprintf(stderr," -f FILENAME  Write DOT output to FILENAME (if -o given)\n");
+                fprintf(stderr," -o           Output the tree in DOT form to file 'tree-view.dot'\n");
+                fprintf(stderr," -r           Make the tree an RBT (the default is a BST)\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr," -h           Print this message\n");
+                exit(EXIT_FAILURE);
                 break;
         }
     }
@@ -97,7 +114,7 @@ int main(int argc, char* argv[]) {
                 toc = clock();
                 fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
                 /*fix root colouring to be black*/
-                dict = setroot(dict);
+                dict = setroot_black(dict);
                 break;
             case 'c':
                 /*c's argument is available in the global
@@ -203,23 +220,40 @@ int main(int argc, char* argv[]) {
                 fclose(graph);
                 break;
             case 'h':
-                /* print a help message describing how to use the program */
-                printf("this is a spellchecking program based on an implementation of a tree abstract data type, which supports both red black trees and binary search trees. \n");
-                printf("it accepts the following command line arguments:\n");
-                printf("-c filename: Check the spelling of words in filename using words read from stdin as the dictionary. Print all unknown words to stdout. Print timing information and unknown word count to stderr. WHen this option is given -d and -o are ignored.\n");
-                printf("-d: print the depth of the tree to stdout\n");
-                printf("-f filename: write the graph output to filename instead of the default tree-view.dot\n");
-                printf("-o: output a representation of the tree in dot form to the file tree-view.dot\n");
-                printf("-r: make the tree a red-black tree instead of a binary search tree.\n");
-                printf("-h: print help message\n");
+                fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
+                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
+                fprintf(stderr,"alongside their frequencies to stdout.\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
+                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
+                fprintf(stderr,"alongside their frequencies to stdout.\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
+                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
+                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n ");
+                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
+                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
+                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n");
+                fprintf(stderr," -d           Only print the tree depth (ignore -o)\n");
+                fprintf(stderr," -f FILENAME  Write DOT output to FILENAME (if -o given)\n");
+                fprintf(stderr," -o           Output the tree in DOT form to file 'tree-view.dot'\n");
+                fprintf(stderr," -r           Make the tree an RBT (the default is a BST)\n");
+                fprintf(stderr,"\n");
+                fprintf(stderr," -h           Print this message\n"); 
                 break;
-            default:
+            case -1:
                 dict = tree_new(BST); 
                 /*read words in from standard in, insert into our dictionary tree*/ 
                 while(getword(word,sizeof word,stdin) != EOF) {
-                    dict = tree_insert(dict,word);
+                   dict = tree_insert(dict,word);
                 } 
                 tree_preorder(dict,print_info);
+                break;
+            default:
+                /*should not reach here... exceptions should be handled in first
+                 *switch statement*/              
                 break;
         }
     } while ((option = getopt(argc, argv, optstring)) != EOF);
