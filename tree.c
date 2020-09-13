@@ -22,26 +22,89 @@ struct tree_node {
 static tree_t tree_type; /* Either RBT or BST */
 
 /**
+ * Returns a new tree of type t and sets it to NULL.
+ *
+ * @param t The tree
+ * @return tree A null tree.
+ */
+tree tree_new(tree_t t) {
+    tree_type = t;
+    return NULL;
+}
+
+/**
+ * Returns the depth of a tree (longest path from root to leaves) recursively.
+ * The base case is if the tree is null, return -1. Otherwise calculate heights
+ * of left/right children while incrementing by 1 and return the largest.
+ *
+ * @param t Tree to find depth of.
+ * @return Tree depth.
+ */
+int tree_depth(tree t) {
+    int l_height, r_height;
+    if (t == NULL) {
+        return -1;
+    }
+    l_height = tree_depth(t->left)++;
+    r_height = tree_depth(t->right)++;
+
+    return (l_height < r_height) ? r_height : l_height;
+}
+
+/**
+ * Frees the memory allocated to a tree recursively.
+ * Work our way through the tree until the leaves are reached,
+ * free the leaves and work back up the tree.
+ *
+ * @param t Tree to free.
+ * @return A null tree
+ */
+tree tree_free(tree t) {
+    if (t==NULL) {
+        return t;
+    }
+    if (t->left != NULL) {
+        t->left = tree_free(t->left);
+    }
+    if (t->right != NULL) {
+        t->right = tree_free(t->right);
+    }
+    free(t->key);
+    free(t);
+    return t;
+}
+
+/**
+ * Searches for a string in a tree recursively and returns a boolean 1 or 0
+ * if the string is found or not respecitvely. 
+ *
+ * @param t Tree to search.
+ * @param str String to find.
+ * @return A boolean representing found or not.
+ */
+int tree_search(tree t, char* str) {
+    if (t==NULL) {
+        return 0;
+        
+    } else if (strcmp(t->key,str)==0) {
+        return 1;
+        
+    } else if (strcmp(str,t->key) < 0) {
+        return tree_search(t->left,str);
+        
+    } else {
+        return tree_search(t->right,str);
+        
+    }
+}
+
+/**
  * This function takes a string as input and prints it to stdin.
  *
  * @param s string to print.
  */
 void print_key(char* s) {
     printf("%s\n", s);
-}
-
-/**
- * Sets the root of tree to black.
- *
- * @param t the tree.
- */
-tree setroot_black(tree t) {
-    if (t==NULL) {
-        printf("Node is null");
-    } else {
-        t->colour = BLACK;
-    }
-    return t;
 }
 
 /**
@@ -58,15 +121,22 @@ void print_colour(tree t) {
 }
 
 /**
- * Returns a new tree of type t and sets it to NULL.
+ * Sets the root of tree to black.
  *
- * @param t The tree
- * @return tree A null tree.
+ * @param t the tree.
  */
-tree tree_new(tree_t t) {
-    tree_type = t;
-    return NULL;
+tree setroot_black(tree t) {
+    if (t==NULL) {
+        printf("Node is null");
+    } else {
+        t->colour = BLACK;
+    }
+    return t;
 }
+
+
+
+
 
 /**
  * An in-order traversal of a tree which prints the strings at each node.
@@ -238,72 +308,6 @@ tree tree_insert(tree t, char* str) {
     }
     
     return t;
-}
-
-/**
- * Searches for a string in a tree recursively and returns a boolean 1 or 0
- * if the string is found or not respecitvely. 
- *
- * @param t Tree to search.
- * @param str String to find.
- * @return A boolean representing found or not.
- */
-int tree_search(tree t, char* str) {
-    if (t==NULL) {
-        return 0;
-        
-    } else if (strcmp(t->key,str)==0) {
-        return 1;
-        
-    } else if (strcmp(str,t->key) < 0) {
-        return tree_search(t->left,str);
-        
-    } else {
-        return tree_search(t->right,str);
-        
-    }
-}
-
-/**
- * Frees the memory allocated to a tree recursively.
- * Work our way through the tree until the leaves are reached,
- * free the leaves and work back up the tree.
- *
- * @param t Tree to free.
- * @return A null tree
- */
-tree tree_free(tree t) {
-    if (t==NULL) {
-        return t;
-    }
-    if (t->left != NULL) {
-        t->left = tree_free(t->left);
-    }
-    if (t->right != NULL) {
-        t->right = tree_free(t->right);
-    }
-    free(t->key);
-    free(t);
-    return t;
-}
-
-/**
- * Returns the depth of a tree (longest path from root to leaves) recursively.
- * The base case is if the tree is null, return -1. Otherwise calculate heights
- * of left/right children while incrementing by 1 and return the largest.
- *
- * @param t Tree to find depth of.
- * @return Tree depth.
- */
-int tree_depth(tree t) {
-    int l_height, r_height;
-    if (t == NULL) {
-        return -1;
-    }
-    l_height = tree_depth(t->left)++;
-    r_height = tree_depth(t->right)++;
-
-    return (l_height < r_height) ? r_height : l_height;
 }
 
 /**
