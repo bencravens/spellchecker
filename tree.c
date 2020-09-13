@@ -45,8 +45,8 @@ int tree_depth(tree t) {
     if (t == NULL) {
         return -1;
     }
-    l_height = tree_depth(t->left)++;
-    r_height = tree_depth(t->right)++;
+    l_height = tree_depth(t->left) + 1;
+    r_height = tree_depth(t->right) + 1;
 
     return (l_height < r_height) ? r_height : l_height;
 }
