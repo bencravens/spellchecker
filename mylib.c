@@ -4,6 +4,9 @@
 #include <ctype.h>
 #include "mylib.h"
 
+/* Grabs a string from a filestream, removes non alphanumeric characters,  
+ * and returns the resulting word
+ */
 int getword(char *s, int limit, FILE *stream) {
     int c;
     char *w = s;
@@ -30,6 +33,10 @@ int getword(char *s, int limit, FILE *stream) {
     return w - s;
 }
 
+/* Allocates memory (n bits) to a void pointer, and returns the result.
+ * prints an error if this fails. 
+ * @param n the amount of memory we need to malloc
+ */
 void* emalloc(size_t n) {
     void* result = malloc(n);
     if (result==NULL) {
