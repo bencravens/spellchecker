@@ -5,6 +5,7 @@
 #include "tree.h"
 #include "mylib.h"
 
+/* Macros that return boolean values for if nodes are red/black */
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour)) 
 
@@ -18,21 +19,21 @@ struct tree_node {
     int freq;
 };
 
-static tree_t tree_type;
+static tree_t tree_type; /* Either RBT or BST */
 
 /**
  * This function takes a string as input and prints it to stdin.
  *
- * @param s string to print
+ * @param s string to print.
  */
 void print_key(char* s) {
     printf("%s\n", s);
 }
 
 /**
- * Sets the root of tree
+ * Sets the root of tree to black.
  *
- * @param s string to print
+ * @param t the tree.
  */
 tree setroot_black(tree t) {
     if (t==NULL) {
@@ -43,6 +44,11 @@ tree setroot_black(tree t) {
     return t;
 }
 
+/**
+ * Prints colour of the node of tree to stdin.
+ *
+ * @param t the tree.
+ */
 void print_colour(tree t) {
     if (t->colour==RED) {
         printf("red: %s\n",t->key);
@@ -51,13 +57,23 @@ void print_colour(tree t) {
     }
 }
 
-
-
+/**
+ * Returns a new tree of type t and sets it to NULL.
+ *
+ * @param t The tree
+ * @return tree A null tree.
+ */
 tree tree_new(tree_t t) {
     tree_type = t;
     return NULL;
 }
 
+/**
+ * An in-order traversal of a tree which prints the strings at each node.
+ * If the tree is an RBT, it also prints the colour of the nodes.
+ * 
+ * @param t the tree to be traversed.
+ */
 void tree_inorder(tree t) {
     if (t==NULL) {
         return;
@@ -76,6 +92,16 @@ void tree_inorder(tree t) {
     }
 }
 
+/**
+ * A pre-order traversal of a tree which performs function f at each node.
+ * The function parsed needs to have the same inputs specified in the header.
+ *
+ * An example of this would be function which prints the frequency of a word
+ * at each node.
+ *
+ * @param t The tree to be traversed.
+ * @param void f(int freq, char* word) Function to be used at the nodes.
+ */
 void tree_preorder(tree t, void f(int freq, char* word)) {
     if (t==NULL) {
         return;
@@ -85,33 +111,46 @@ void tree_preorder(tree t, void f(int freq, char* word)) {
     tree_preorder(t->right,f);
 }
 
-tree left_rotate(tree t) {
-    /*keep track of original*/
-    tree temp = t;
-    /*change the root to point to its right child*/
-    t = t->right;
-    /*make the right child of temp (original root) point to
-     * left child of the new root. */
-    temp->right = t->left;
-    /*now make the left child of the new root point to temp (old root)*/
-    t->left = temp;
-    return t;
+/**
+ * Rotates a tree to the left.
+ * For application of function see tree_fix.
+ * Specifcally only used on RBT trees.
+ *
+ * @param t The tree to be rotated.
+ * @return Left rotated tree.
+ */
+tree left_rotate(tree r) {
+    tree temp = r;
+    r = r->right;
+    temp->right = r->left;
+    r->left = temp;
+    return r;
 }
 
+/**
+ * Rotates a tree to the right.
+ * For application of function see tree_fix.
+ * Specifcally only used on RBT trees.
+ *
+ * @param r The tree to be rotated.
+ * @return Right rotated tree.
+ */
 tree right_rotate(tree r) {
-    /*keep track of original*/
     tree temp = r;
-    /*change the root to point to its left child*/
     r = r->left;
-    /*make the left child of temp (original root) point to
-     * right child of the new root. */
     temp->left = r->right;
-    /*now make the right child of the new root point to temp (old root)*/
     r->right = temp;
     return r;
 }
 
-
+/**
+ * Fixes an RBT after an insertion is made.
+ * Runs through a series of checks and performs left/right rotations
+ * until the tree is a valid RBT.
+ * 
+ * @param r The RBT to be fixed
+ * @return The fixed RBT tree.
+ */
 static tree tree_fix(tree r) {
     if(IS_RED(r->left) && IS_RED(r->left->left)) {
         if (IS_RED(r->right)) {
@@ -159,6 +198,17 @@ static tree tree_fix(tree r) {
     return r;
 }
 
+/**
+ * Inserts a string into a tree recursively.
+ * The base case if the tree is null, create a tree and set as the string
+ * to be inserted. If the string is already in the tree, increment
+ * the frequency variable tied to that string. Otherwise call the function
+ * recurrsively on the left/right subtrees.
+ * 
+ * @param t Tree to be inserted into.
+ * @param str String to be inserted
+ * @return The tree with inserted value/frequency updated.
+ */
 tree tree_insert(tree t, char* str) {
 
     if (t==NULL) {
@@ -168,9 +218,12 @@ tree tree_insert(tree t, char* str) {
         t->freq = 1;
         t->left = NULL;
         t->right = NULL;
+        
+        /* If the tree is an RBT, we colour the root node red as default */
         if (tree_type == RBT) {
-            t->colour = RED; /*node is red by default*/
+            t->colour = RED;
         }
+        
     } else if (strcmp(t->key,str)==0) {
         t->freq++;
         ;
@@ -179,29 +232,46 @@ tree tree_insert(tree t, char* str) {
     } else {
         t->right = tree_insert(t->right,str);
     }
+    /* If the tree is an RBT, we want to fix it so it's a valid RBT */
     if (tree_type == RBT) {
         t = tree_fix(t);
     }
+    
     return t;
 }
 
+/**
+ * Searches for a string in a tree recursively and returns a boolean 1 or 0
+ * if the string is found or not respecitvely. 
+ *
+ * @param t Tree to search.
+ * @param str String to find.
+ * @return A boolean representing found or not.
+ */
 int tree_search(tree t, char* str) {
     if (t==NULL) {
-        /*empty tree, so string can't be found*/
         return 0;
+        
     } else if (strcmp(t->key,str)==0) {
-        /*found the string, return true*/
         return 1;
+        
     } else if (strcmp(str,t->key) < 0) {
-        /*node too big, search left subtree*/
         return tree_search(t->left,str);
+        
     } else {
-        /*node too small, search right subtree*/
         return tree_search(t->right,str);
+        
     }
 }
 
-
+/**
+ * Frees the memory allocated to a tree recursively.
+ * Work our way through the tree until the leaves are reached,
+ * free the leaves and work back up the tree.
+ *
+ * @param t Tree to free.
+ * @return A null tree
+ */
 tree tree_free(tree t) {
     if (t==NULL) {
         return t;
@@ -217,18 +287,23 @@ tree tree_free(tree t) {
     return t;
 }
 
-/* Input tree b and returns an int representing longest path between the root
-   and furthest leaf node.*/
+/**
+ * Returns the depth of a tree (longest path from root to leaves) recursively.
+ * The base case is if the tree is null, return -1. Otherwise calculate heights
+ * of left/right children while incrementing by 1 and return the largest.
+ *
+ * @param t Tree to find depth of.
+ * @return Tree depth.
+ */
 int tree_depth(tree t) {
     int l_height, r_height;
     if (t == NULL) {
         return -1;
     }
-    l_height = tree_depth(t->left);
-    r_height = tree_depth(t->right);
+    l_height = tree_depth(t->left)++;
+    r_height = tree_depth(t->right)++;
 
-    return (l_height < r_height) ? (r_height + 1) : (l_height + 1);
-    
+    return (l_height < r_height) ? r_height : l_height;
 }
 
 /**
