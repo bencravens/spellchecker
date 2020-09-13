@@ -117,14 +117,15 @@ int main(int argc, char* argv[]) {
                 break;
         }
     }
-    
+
+    /*initialize tree. If r is the case, init it to a red black tree.
+     * otherwise, init it to a BST */         
     if (case_r) {
         /*start fill timer*/
         tic = clock();
         /*declare tree as rbt*/
         dict = tree_new(RBT); 
     } else {
-        /* r is being called, so let's make a rbt here. */
         /*start fill timer*/
         tic = clock();
         /*declare tree as bst*/
@@ -138,11 +139,12 @@ int main(int argc, char* argv[]) {
     dict = writedict(dict, word);
     toc = clock();
     fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
-    /*fix root colouring to be black*/
+    /*if we have a bst, fix root colouring to be black*/
     if (case_r) {
         dict = setroot_black(dict);
     }
 
+    /*now we go in order of command line argument precedence*/
     if (case_c) {
         /*open file to be spellchecked*/
         if (NULL == (target = fopen(filename_c, "r"))) {
@@ -165,9 +167,11 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Unknown words = %d\n", unknown_words);
         fclose(target);
     } else if (case_d) {
+        /*print tree depth*/
         depth = tree_depth(dict); 
         fprintf(stdout,"%d\n",depth);
     } else if (case_o) {
+        /*output graph. use custom filename if f is supplied.*/
         if (case_f) {
             graph = fopen(filename_f,"w");
             printf("Creating dot file '%s'\n",filename_f);
@@ -178,6 +182,7 @@ int main(int argc, char* argv[]) {
         tree_output_dot(dict, graph);
         fclose(graph);
     } else {
+        /*just do the default case...*/
        tree_preorder(dict,print_info);
     }
     tree_free(dict);
