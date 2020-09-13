@@ -14,20 +14,6 @@ static void print_info(int freq, char* word) {
     printf("%-4d %s\n",freq,word);
 }
 
-/*auxillary function to populate dictionary tree with words*/
-tree writedict(tree dict, char* word) {
-    while(getword(word,sizeof word,stdin) != EOF) {
-        printf("inserting %s\n",word);
-        dict = tree_insert(dict,word);
-    }
-
-    if(dict == NULL) {
-        printf("Empty dictionary..");
-    }
-    return dict;
-}
-
-
 int main(int argc, char* argv[]) {
     /*declaring constants*/
     clock_t tic, toc;
@@ -121,22 +107,17 @@ int main(int argc, char* argv[]) {
     /*initialize tree. If r is the case, init it to a red black tree.
      * otherwise, init it to a BST */         
     if (case_r) {
-        /*start fill timer*/
-        tic = clock();
         /*declare tree as rbt*/
         dict = tree_new(RBT); 
     } else {
-        /*start fill timer*/
-        tic = clock();
         /*declare tree as bst*/
         dict = tree_new(BST);
     } 
-
+    tic = clock();
     /*read words in from standard in, insert into our dictionary tree*/ 
     while(getword(word,sizeof word,stdin) != EOF) {
         dict = tree_insert(dict,word);
     } 
-    dict = writedict(dict, word);
     toc = clock();
     fill_time = (toc - tic) / ((double)CLOCKS_PER_SEC);               
     /*if we have a bst, fix root colouring to be black*/
