@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
     if (case_c) {
         /* Open file to be spellchecked */
         if (NULL == (target = fopen(filename_c, "r"))) {
-            fprintf(stderr, "ERROR: can't find file %s\n", filename_c);
+            fprintf(stderr, "ERROR: can't open file %s in mode 'r'\n", filename_c);
             return EXIT_FAILURE;
         }
         tic = clock();
@@ -186,7 +186,10 @@ int main(int argc, char* argv[]) {
     } else if (case_o) {
         /* Output graph, use custom filename if f is supplied. */
         if (case_f) {
-            graph = fopen(filename_f,"w");
+            if (NULL == (graph = fopen(filename_f, "r"))) {
+                fprintf(stderr, "ERROR: can't open file %s in mode 'r'\n", filename_f);
+                return EXIT_FAILURE;
+            } 
             printf("Creating dot file '%s'\n",filename_f);
         } else {
             graph = fopen("tree-view.dot","w"); 
