@@ -44,3 +44,16 @@ void* emalloc(size_t n) {
     }
     return result;
 }
+
+/* Reallocates memory (n bits) to a char pointer, and returns the result.
+ * prints an error if this fails. 
+ * @param n the amount of memory we need to realloc
+ * @param a the pointer to char array
+ */
+void* erealloc(char* a, size_t n) {
+    void* result = realloc(a,n);
+    if (result==NULL) {
+        fprintf(stderr, "realloc failed.\n");
+    }
+    return result;
+}

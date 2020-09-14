@@ -19,8 +19,8 @@ int main(int argc, char* argv[]) {
     clock_t tic, toc;
     const char* optstring = "c:df:orh";
     extern char* optarg;
-    char* filename_c;
-    char* filename_f;
+    char* filename_c = emalloc(sizeof filename_c);
+    char* filename_f = emalloc(sizeof filename_f);
     char option;
     /*file pointer for graph output*/
     FILE* graph;
@@ -47,7 +47,8 @@ int main(int argc, char* argv[]) {
                 break;
             case 'c':
                 case_c = 1;
-                filename_c = optarg;
+                filename_c = erealloc(filename_c, (strlen(optarg)+1) * sizeof filename_c);
+                strcpy(filename_c, optarg);
                 break; 
             case 'd':
                 case_d = 1;
@@ -57,7 +58,8 @@ int main(int argc, char* argv[]) {
                 break;
            case 'f':
                 case_f = 1;
-                filename_f = optarg;
+                filename_f = erealloc(filename_f, (strlen(optarg)+1) * sizeof filename_f);
+                strcpy(filename_f, optarg);
                 break;
            case 'h':
                 fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
@@ -166,6 +168,9 @@ int main(int argc, char* argv[]) {
         /*just do the default case...*/
        tree_preorder(dict,print_info);
     }
+    free(filename_c);
+    free(filename_f);
+    /*free memory allocated*/
     tree_free(dict);
     return EXIT_SUCCESS;
 }
