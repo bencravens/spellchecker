@@ -93,8 +93,7 @@ int tree_search(tree t, char* str) {
         return tree_search(t->left,str);
         
     } else {
-        return tree_search(t->right,str);
-        
+        return tree_search(t->right,str);  
     }
 }
 
@@ -133,10 +132,6 @@ tree setroot_black(tree t) {
     }
     return t;
 }
-
-
-
-
 
 /**
  * An in-order traversal of a tree which prints the strings at each node.
@@ -350,6 +345,3 @@ void tree_output_dot(tree t, FILE *out) {
     tree_output_dot_aux(t, out);
     fprintf(out, "}\n");
 }
-
-
-
