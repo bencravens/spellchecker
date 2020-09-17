@@ -41,8 +41,8 @@ static void print_info(int freq, char* word) {
 *
 *   -o outputs a graph representation of the dictionary tree in the .dot format
 *
-*   -f filename is an optional addition to the -o that redirects the .dot output
-*      to the filename "filename".
+*   -f filename is an optional addition to the -o that redirects the .dot 
+*   output to the filename "filename".
 *
 * @param argc The number of command line arguments.
 * @param argv String containing command line arguments passed, to be
@@ -59,6 +59,7 @@ int main(int argc, char* argv[]) {
     
     char* filename_c = emalloc(sizeof filename_c);
     char* filename_f = emalloc(sizeof filename_f);
+    int filename_size;
     FILE* graph;
     FILE* target;
     
@@ -67,14 +68,16 @@ int main(int argc, char* argv[]) {
     char word[256];
     tree dict = NULL;
        
-    /* Keep track of which cases we have had (as sometimes when we pass one command line arg others should be ignored) */
+    /* Keep track of which cases we have had (as sometimes when we pass one 
+     * command line arg others should be ignored) */
     int case_r = 0;
     int case_c = 0;
     int case_d = 0;
     int case_o = 0;
     int case_f = 0;
 
-    /* Reading in command line arguments, keeping track of which ones we have been passed */
+    /* Reading in command line arguments, keeping track of which ones we 
+     * have been passed */
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
             case 'r':
@@ -82,7 +85,8 @@ int main(int argc, char* argv[]) {
                 break;
             case 'c':
                 case_c = 1;
-                filename_c = erealloc(filename_c, (strlen(optarg)+1) * sizeof filename_c);
+                filename_size = (strlen(optarg)+1) * sizeof filename_c;
+                filename_c = erealloc(filename_c,filename_size );
                 strcpy(filename_c, optarg);
                 break; 
             case 'd':
@@ -93,49 +97,78 @@ int main(int argc, char* argv[]) {
                 break;
            case 'f':
                 case_f = 1;
-                filename_f = erealloc(filename_f, (strlen(optarg)+1) * sizeof filename_f);
+                filename_size = (strlen(optarg)+1) * sizeof filename_f; 
+                filename_f = erealloc(filename_f,filename_size);
                 strcpy(filename_f, optarg);
                 break;
            case 'h':
                 fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
                 fprintf(stderr,"\n");
-                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
-                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
+                fprintf(stderr,"Perform various operations using a");
+                fprintf(stderr," binary tree. ");
+                fprintf(stderr,"By default, words\n");
+                fprintf(stderr,"are read from stdin and");
+                fprintf(stderr," added to the tree, "); 
+                fprintf(stderr, "before being printed out\n");
                 fprintf(stderr,"alongside their frequencies to stdout.\n");
                 fprintf(stderr,"\n");
-                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
-                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
-                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n ");
-                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
-                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
-                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n");
-                fprintf(stderr," -d           Only print the tree depth (ignore -o)\n");
-                fprintf(stderr," -f FILENAME  Write DOT output to FILENAME (if -o given)\n");
-                fprintf(stderr," -o           Output the tree in DOT form to file 'tree-view.dot'\n");
-                fprintf(stderr," -r           Make the tree an RBT (the default is a BST)\n");
+                fprintf(stderr,"-c FILENAME  Check spelling of words in");
+                fprintf(stderr, " FILENAME using words\n");
+                fprintf(stderr," read from stdin as the dictionary.");
+                fprintf(stderr, " Print timing\n");
+                fprintf(stderr," info & unknown words to stderr ");
+                fprintf(stderr, " (ignore -d & -o)\n ");
+                fprintf(stderr,"-c FILENAME ");
+                fprintf(stderr, " Check spelling of words in");
+                fprintf(stderr, " FILENAME using words\n");
+                fprintf(stderr," read from stdin as the dictionary.");  
+                fprintf(stderr, " Print timing\n");
+                fprintf(stderr," info & unknown words to ");
+                fprintf(stderr, " stderr (ignore -d & -o)\n");
+                fprintf(stderr,"-d Only print the tree depth (ignore -o)\n");
+                fprintf(stderr,"-f FILENAME  Write DOT output ");
+                fprintf(stderr ," to FILENAME (if -o given)\n");
+                fprintf(stderr,"-o Output the tree in DOT form to");
+                fprintf(stderr, " file 'tree-view.dot'\n");
+                fprintf(stderr,"-r Make the tree an RBT (the default is a");
+                fprintf(stderr,"  BST)\n");
                 fprintf(stderr,"\n");
-                fprintf(stderr," -h           Print this message\n");
+                fprintf(stderr,"-h           Print this message\n");
                 exit(EXIT_FAILURE);
                 break;
             default:
                 fprintf(stderr,"Usage: ./output [OPTION]... <STDIN>\n");
                 fprintf(stderr,"\n");
-                fprintf(stderr,"Perform various operations using a binary tree.  By default, words\n");
-                fprintf(stderr,"are read from stdin and added to the tree, before being printed out\n");
+                fprintf(stderr,"Perform various operations using a");
+                fprintf(stderr," binary tree. ");
+                fprintf(stderr,"By default, words\n");
+                fprintf(stderr,"are read from stdin and");
+                fprintf(stderr," added to the tree, "); 
+                fprintf(stderr, "before being printed out\n");
                 fprintf(stderr,"alongside their frequencies to stdout.\n");
                 fprintf(stderr,"\n");
-                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
-                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
-                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n ");
-                fprintf(stderr," -c FILENAME  Check spelling of words in FILENAME using words\n");
-                fprintf(stderr,"              read from stdin as the dictionary.  Print timing\n");
-                fprintf(stderr,"              info & unknown words to stderr (ignore -d & -o)\n");
-                fprintf(stderr," -d           Only print the tree depth (ignore -o)\n");
-                fprintf(stderr," -f FILENAME  Write DOT output to FILENAME (if -o given)\n");
-                fprintf(stderr," -o           Output the tree in DOT form to file 'tree-view.dot'\n");
-                fprintf(stderr," -r           Make the tree an RBT (the default is a BST)\n");
+                fprintf(stderr,"-c FILENAME  Check spelling of words in");
+                fprintf(stderr, " FILENAME using words\n");
+                fprintf(stderr," read from stdin as the dictionary.");
+                fprintf(stderr, " Print timing\n");
+                fprintf(stderr," info & unknown words to stderr ");
+                fprintf(stderr, " (ignore -d & -o)\n ");
+                fprintf(stderr,"-c FILENAME ");
+                fprintf(stderr, " Check spelling of words in");
+                fprintf(stderr, " FILENAME using words\n");
+                fprintf(stderr," read from stdin as the dictionary.");  
+                fprintf(stderr, " Print timing\n");
+                fprintf(stderr," info & unknown words to ");
+                fprintf(stderr, " stderr (ignore -d & -o)\n");
+                fprintf(stderr,"-d Only print the tree depth (ignore -o)\n");
+                fprintf(stderr,"-f FILENAME  Write DOT output ");
+                fprintf(stderr ," to FILENAME (if -o given)\n");
+                fprintf(stderr,"-o Output the tree in DOT form to");
+                fprintf(stderr, " file 'tree-view.dot'\n");
+                fprintf(stderr,"-r Make the tree an RBT (the default is a");
+                fprintf(stderr,"  BST)\n");
                 fprintf(stderr,"\n");
-                fprintf(stderr," -h           Print this message\n");
+                fprintf(stderr,"-h           Print this message\n");
                 exit(EXIT_FAILURE);
                 break;
         }
@@ -187,7 +220,7 @@ int main(int argc, char* argv[]) {
         /* Output graph, use custom filename if f is supplied. */
         if (case_f) {
             if (NULL == (graph = fopen(filename_f, "r"))) {
-                fprintf(stderr, "ERROR: can't open file %s in mode 'r'\n", filename_f);
+                fprintf(stderr, "ERROR: can't open file %s \n", filename_f);
                 return EXIT_FAILURE;
             } 
             printf("Creating dot file '%s'\n",filename_f);

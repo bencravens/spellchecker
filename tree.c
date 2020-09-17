@@ -33,9 +33,10 @@ tree tree_new(tree_t t) {
 }
 
 /**
- * Returns the depth of a tree (longest path from root to leaves) recursively.
- * The base case is if the tree is null, return -1. Otherwise calculate heights
- * of left/right children while incrementing by 1 and return the largest.
+ * Returns the depth of a tree (longest path from root to leaves) 
+ * recursively. The base case is if the tree is null, return -1. 
+ * Otherwise calculate heights of left/right children 
+ * while incrementing by 1 and return the largest.
  *
  * @param t Tree to find depth of.
  * @return Tree depth.
@@ -53,8 +54,9 @@ int tree_depth(tree t) {
 
 /**
  * Frees the memory allocated to a tree recursively.
- * Work our way through the tree until the leaves are reached,
- * free the leaves and work back up the tree.
+ * Work our way through the tree 
+ * until the leaves are reached,free the leaves 
+ * and work back up the tree.
  *
  * @param t Tree to free.
  * @return A null tree
@@ -75,8 +77,9 @@ tree tree_free(tree t) {
 }
 
 /**
- * Searches for a string in a tree recursively and returns a boolean 1 or 0
- * if the string is found or not respecitvely. 
+ * Searches for a string in a tree recursively 
+ * and returns a boolean 1 or 0 if the string 
+ * is found or not respecitvely. 
  *
  * @param t Tree to search.
  * @param str String to find.
@@ -98,7 +101,8 @@ int tree_search(tree t, char* str) {
 }
 
 /**
- * This function takes a string as input and prints it to stdin.
+ * This function takes a string as 
+ * input and prints it to stdin.
  *
  * @param s string to print.
  */
@@ -134,8 +138,9 @@ tree setroot_black(tree t) {
 }
 
 /**
- * An in-order traversal of a tree which prints the strings at each node.
- * If the tree is an RBT, it also prints the colour of the nodes.
+ * An in-order traversal of a tree which 
+ * prints the strings at each node. If the tree is an 
+ * RBT, it also prints the colour of the nodes.
  * 
  * @param t the tree to be traversed.
  */
@@ -159,10 +164,11 @@ void tree_inorder(tree t) {
 
 /**
  * A pre-order traversal of a tree which performs function f at each node.
- * The function parsed needs to have the same inputs specified in the header.
+ * The function parsed needs to have the same inputs specified in the 
+ * header.
  *
- * An example of this would be function which prints the frequency of a word
- * at each node.
+ * An example of this would be function which prints the frequency 
+ * of a word at each node.
  *
  * @param t The tree to be traversed.
  * @param void f(int freq, char* word) Function to be used at the nodes.
@@ -265,10 +271,12 @@ static tree tree_fix(tree r) {
 
 /**
  * Inserts a string into a tree recursively.
- * The base case if the tree is null, create a tree and set as the string
- * to be inserted. If the string is already in the tree, increment
- * the frequency variable tied to that string. Otherwise call the function
- * recurrsively on the left/right subtrees.
+ * The base case if the tree is null, create a tree and 
+ * set as the string to be inserted. If the string 
+ * is already in the tree, increment the frequency 
+ * variable tied to that string. Otherwise 
+ * call the function recurrsively on 
+ * the left/right subtrees.
  * 
  * @param t Tree to be inserted into.
  * @param str String to be inserted
@@ -284,7 +292,7 @@ tree tree_insert(tree t, char* str) {
         t->left = NULL;
         t->right = NULL;
         
-        /* If the tree is an RBT, we colour the root node red as default */
+        /* If RBT, colour the root node red as default */
         if (tree_type == RBT) {
             t->colour = RED;
         }
@@ -297,7 +305,7 @@ tree tree_insert(tree t, char* str) {
     } else {
         t->right = tree_insert(t->right,str);
     }
-    /* If the tree is an RBT, we want to fix it so it's a valid RBT */
+    /* If the tree is an RBT, we want to fix it */
     if (tree_type == RBT) {
         t = tree_fix(t);
     }
@@ -306,7 +314,8 @@ tree tree_insert(tree t, char* str) {
 }
 
 /**
- * Traverses the tree writing a DOT description about connections, and
+ * Traverses the tree writing a DOT description about
+ * connections, and
  * possibly colours, to the given output stream.
  *
  * @param t the tree to output a DOT description of.
