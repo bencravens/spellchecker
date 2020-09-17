@@ -6,7 +6,7 @@ checkall:
 	cat defaultdiff.txt
 	cat depthdiff.txt
 compile:
-	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
+	gcc -W -Wall -ansi -pedantic -lm main.c mylib.c tree.c -o asgn
 dotcheck: 
 	gcc -W -Wall -O2 -ansi -pedantic -g tree.c mylib.c main.c -o output
 	./output < smalldictionary.txt  - h -f -o -r -d "output.dot"

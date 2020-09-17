@@ -23,10 +23,11 @@ static void print_info(int freq, char* word) {
 *
 * Main calls on tree.c, an implementation of a tree ADT that can be
 * either a BST or an RBT. Main has the functionality to use this tree ADT as
-* a spellchecker. It does this by reading in a dictionary file through stdin,
-* and making a tree based on the words in the dictionary. Then, when you give it
-* another file to be spellchecked, it can check using tree search whether or not
-* the words in the file it is spellchecking appear in the dictionary tree. 
+* a spellchecker. It does this by reading in a dictionary file through 
+* stdin, and making a tree based on the words in the dictionary. 
+* Then, when you give it another file to be spellchecked, 
+* it can check using tree search whether or not the words in 
+* the file it is spellchecking appear in the dictionary tree. 
 * The specific behaviour of this program depends on what 
 * combination of command line arguments are passed. 
 *
@@ -117,14 +118,7 @@ int main(int argc, char* argv[]) {
                 fprintf(stderr," read from stdin as the dictionary.");
                 fprintf(stderr, " Print timing\n");
                 fprintf(stderr," info & unknown words to stderr ");
-                fprintf(stderr, " (ignore -d & -o)\n ");
-                fprintf(stderr,"-c FILENAME ");
-                fprintf(stderr, " Check spelling of words in");
-                fprintf(stderr, " FILENAME using words\n");
-                fprintf(stderr," read from stdin as the dictionary.");  
-                fprintf(stderr, " Print timing\n");
-                fprintf(stderr," info & unknown words to ");
-                fprintf(stderr, " stderr (ignore -d & -o)\n");
+                fprintf(stderr, " (ignore -d & -o)\n");
                 fprintf(stderr,"-d Only print the tree depth (ignore -o)\n");
                 fprintf(stderr,"-f FILENAME  Write DOT output ");
                 fprintf(stderr ," to FILENAME (if -o given)\n");
@@ -152,14 +146,7 @@ int main(int argc, char* argv[]) {
                 fprintf(stderr," read from stdin as the dictionary.");
                 fprintf(stderr, " Print timing\n");
                 fprintf(stderr," info & unknown words to stderr ");
-                fprintf(stderr, " (ignore -d & -o)\n ");
-                fprintf(stderr,"-c FILENAME ");
-                fprintf(stderr, " Check spelling of words in");
-                fprintf(stderr, " FILENAME using words\n");
-                fprintf(stderr," read from stdin as the dictionary.");  
-                fprintf(stderr, " Print timing\n");
-                fprintf(stderr," info & unknown words to ");
-                fprintf(stderr, " stderr (ignore -d & -o)\n");
+                fprintf(stderr," (ignore -d & -o)\n");
                 fprintf(stderr,"-d Only print the tree depth (ignore -o)\n");
                 fprintf(stderr,"-f FILENAME  Write DOT output ");
                 fprintf(stderr ," to FILENAME (if -o given)\n");
@@ -196,7 +183,7 @@ int main(int argc, char* argv[]) {
     if (case_c) {
         /* Open file to be spellchecked */
         if (NULL == (target = fopen(filename_c, "r"))) {
-            fprintf(stderr, "ERROR: can't open file %s in mode 'r'\n", filename_c);
+            fprintf(stderr, "ERROR: can't open file %s\n", filename_c);
             return EXIT_FAILURE;
         }
         tic = clock();
