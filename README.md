@@ -7,8 +7,7 @@ Main calls on tree.c, an implementation of a tree ADT that can be either a BST o
 *
 *   -r initializes the tree as a red black tree.
 *
-*   -c filename checks the spelling in file "filename", 
-*      and outputs timing information to stderr.
+*   -c filename checks the spelling in file "filename", and outputs timing information to stderr.
 *
 *   -d outputs the depth of the dictionary tree.
 *
