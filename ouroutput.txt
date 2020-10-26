@@ -1,5 +1,0 @@
-The
-quic
-fox
-jumpfs
-lazy
